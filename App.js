@@ -7,45 +7,52 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
-
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+import {StyleSheet, View, FlatList} from 'react-native';
+import Student from './src/components/Studnet';
 
 type Props = {};
 export default class App extends Component<Props> {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Hello Linchengzzz !!!
-        </Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
-      </View>
-    );
-  }
-}
+    constructor() {
+        super();
+        this.state = {
+            data: ''
+        }
+    }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+    // 获取数据
+    getData(): void {
+        fetch('http://break.hqq.vip/hqqbreak/message/findNewspaperByType', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'Authorization': 'Basic YmFzaWNpczVpOmxFVUdkNEx0Rg=='
+            },
+            body: JSON.stringify({
+                params: {
+                    page: 1,
+                    size: 5,
+                    type: 'hqq'
+                }
+            })
+        }).then(response => response.json()).then(data => {
+            this.setState({
+                data: data.data.content
+            });
+        });
+    }
+
+    componentDidMount(): void {
+        this.getData();
+    }
+
+    render() {
+        return (
+            <View>
+                <FlatList
+                    data={this.state.data}
+                    renderItem={({item}) => <Student {...item}/>}
+                    keyExtractor={(item) => item.id.toString()}/>
+            </View>
+        );
+    }
+}
