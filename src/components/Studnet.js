@@ -1,4 +1,6 @@
 import {Image, StyleSheet, Text, View} from "react-native";
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
 import React from "react";
 
 const styles = StyleSheet.create({
@@ -48,6 +50,7 @@ export default class Student extends React.Component {
                 </View>
                 <View style={styles.footer}>
                     <Text>{this.props.author}</Text>
+                    <FontAwesome name={'home'} size={30} color={'green'}/>
                     <Text>  阅读量: {this.props.reading}</Text>
                 </View>
             </View>
